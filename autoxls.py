@@ -23,37 +23,50 @@ def main():
     print(f"  Input:  {cartella_IN}")
     print(f"  Output: {cartella_OUT}\n")
 
-    file_blps = sorted(RicercaBLPS().trova_blps(cartella_IN))
+    file_blps = sorted(RicercaBLPS().trova_dvr(cartella_IN))
     if not file_blps:
         print("  Nessun file .blps trovato.")
         return
 
     print(f"  Trovati {len(file_blps)} file .blps\n")
 
-    tutte_risorse = []
+    os.makedirs(cartella_OUT, exist_ok=True)
+    
+    totale_generale = 0
+    lav_totale_generale = 0
+    file_processati = 0
+    
     for i, percorso in enumerate(sorted(file_blps), 1):
         nome_file = os.path.basename(percorso)
         print(f"  [{i}/{len(file_blps)}] {nome_file}")
         nome_az, risorse = Estrattore().estrai_da_blps(percorso)
+        
+        if not risorse:
+            print(f"        Nessuna risorsa trovata.")
+            continue
+        
         lavoratori = sum(1 for r in risorse if r.get('_tipo') == 1)
         altri      = len(risorse) - lavoratori
         print(f"        Azienda: {nome_az}")
         print(f"        Lavoratori (Tipo=1): {lavoratori}  |  Altri ruoli: {altri}")
-        tutte_risorse.extend(risorse)
+        
+        # Crea un file Excel separato per ogni .blps
+        output = os.path.join(cartella_OUT, f"{nome_az}.xls")
+        Excel().crea_excel(risorse, output)
+        
+        totale_generale += len(risorse)
+        lav_totale_generale += lavoratori
+        file_processati += 1
 
-    if not tutte_risorse:
+    if file_processati == 0:
         print("\n  Nessuna risorsa trovata.")
         return
 
-    os.makedirs(cartella_OUT, exist_ok=True)
-    output = os.path.join(cartella_OUT, f"{nome_az}.xls")
-    Excel().crea_excel(tutte_risorse, output)
-
-    lav_tot = sum(1 for r in tutte_risorse if r.get('_tipo') == 1)
     print(f"\n{'='*60}")
     print(f"  Completato!")
-    print(f"  Totale righe:       {len(tutte_risorse)}")
-    print(f"  di cui lavoratori:  {lav_tot}")
+    print(f"  File creati:       {file_processati}")
+    print(f"  Totale righe:      {totale_generale}")
+    print(f"  di cui lavoratori: {lav_totale_generale}")
     print(f"{'='*60}\n")
 
 
