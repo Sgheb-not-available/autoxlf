@@ -58,6 +58,7 @@ class Estrattore:
             cur.execute("""
                 SELECT *
                 FROM Utente
+                WHERE Tipo = 1
                 ORDER BY Cognome, Nome
             """)
             utenti = cur.fetchall()
@@ -76,8 +77,6 @@ class Estrattore:
                 mansioni_str  = '; '.join(mansioni_list)
 
                 risorsa = {
-                    'Azienda':            nome_azienda,
-                    'File sorgente':      os.path.basename(percorso_blps),
                     'Cognome':            cognome,
                     'Nome':               nome,
                     'ComuneNascita':      (u['ComuneNascita']  or '').strip(),
@@ -96,9 +95,6 @@ class Estrattore:
                     'Titolo':             (u['Titolo']          or '').strip(),
                     'Nazionalita':        (u['Nazionalita']     or '').strip(),
                     'ProvinciaNascita':   (u['ProvinciaNascita'] or '').strip(),
-                    'FormazioneCogente':  'Sì' if u['FormazioneCogente'] else 'No',
-                    'SorveglianzaSanitaria': 'Sì' if u['SorveglianzaSanitaria'] else 'No',
-                    '_tipo': tipo,  # campo interno, non va in Excel
                 }
                 risorse.append(risorsa)
 

@@ -5,12 +5,9 @@ from openpyxl.utils import get_column_letter
 class Excel:
 
     HEADER_FISSI = [
-        'Azienda', 'File sorgente',
         'Cognome', 'Nome', 'ComuneNascita', 'DataNascita', 'Sesso',
         'CF', 'ComuneResidenza', 'PR', 'CAP', 'Indirizzo',
-        'DataAssunzione', 'Note', 'Mansioni', 'Email',
-        'Matricola', 'Titolo', 'Nazionalita', 'ProvinciaNascita',
-        'FormazioneCogente', 'SorveglianzaSanitaria'
+        'DataAssunzione', 'Note', 'Mansioni', 'Email'
     ]
     
 
@@ -39,13 +36,11 @@ class Excel:
         left   = Alignment(horizontal="left",   vertical="center")
 
         LARGHEZZE = {
-            'Azienda': 28, 'File sorgente': 24, 'Cognome': 18, 'Nome': 16,
+            'Cognome': 18, 'Nome': 16,
             'ComuneNascita': 18, 'DataNascita': 13, 'Sesso': 10,
             'CF': 18, 'ComuneResidenza': 18, 'PR': 6, 'CAP': 8,
             'Indirizzo': 24, 'DataAssunzione': 15, 'Note': 22,
-            'Mansioni': 28, 'Email': 26, 'Matricola': 10, 'Titolo': 10,
-            'Nazionalita': 14, 'ProvinciaNascita': 14,
-            'FormazioneCogente': 16, 'SorveglianzaSanitaria': 18,
+            'Mansioni': 28, 'Email': 26
         }
 
         def scrivi_foglio(ws, righe, titolo):
@@ -63,12 +58,7 @@ class Excel:
 
             # Dati
             for ri, risorsa in enumerate(righe, 2):
-                # Colore riga: giallo per non-lavoratori, alternato per lavoratori
-                tipo = risorsa.get('_tipo', 1)
-                if tipo != 1:
-                    fill = cons_fill
-                else:
-                    fill = alt_fill if ri % 2 == 0 else PatternFill()
+                fill = alt_fill if ri % 2 == 0 else PatternFill()
 
                 for ci, h in enumerate(self.HEADER_FISSI, 1):
                     val  = risorsa.get(h, '')

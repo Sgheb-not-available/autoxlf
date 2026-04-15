@@ -46,7 +46,7 @@ def main():
         return
 
     os.makedirs(cartella_OUT, exist_ok=True)
-    output = os.path.join(cartella_OUT, f"{nome_az}.xlf")
+    output = os.path.join(cartella_OUT, f"{nome_az}.xls")
     Excel().crea_excel(tutte_risorse, output)
 
     lav_tot = sum(1 for r in tutte_risorse if r.get('_tipo') == 1)
