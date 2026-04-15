@@ -5,7 +5,7 @@ Se non si specifica la cartella, usa la directory corrente.
 """
 
 import os
-import glob
+from ricerca_blps import RicercaBLPS
 from estrattore import Estrattore
 from creatore_excel import Excel
 
@@ -23,7 +23,7 @@ def main():
     print(f"  Input:  {cartella_IN}")
     print(f"  Output: {cartella_OUT}\n")
 
-    file_blps = glob.glob(os.path.join(cartella_IN, "**", "*.blps"), recursive=True)
+    file_blps = sorted(RicercaBLPS().trova_blps(cartella_IN))
     if not file_blps:
         print("  Nessun file .blps trovato.")
         return
